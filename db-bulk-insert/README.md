@@ -3,7 +3,7 @@
 Execute o seguinte comando em um terminal `unix` na raiz do projeto:
 
 ```bash
-export $(cat .env | xargs) && env PATH="$PATH" make all;
+export $(cat .env | xargs) && env PATH="$PATH" make all
 ```
 
 Veja o arquivo `Makefile` para mais comandos.
