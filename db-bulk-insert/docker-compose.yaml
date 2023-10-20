@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    
+  migrate:
+    image: migrate/migrate
+    env_file:
+      - .env
+    command: -path /migrations -database "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable" -verbose up
+    volumes:
+      - ./db/migrations:/migrations
+    depends_on:
+      - db

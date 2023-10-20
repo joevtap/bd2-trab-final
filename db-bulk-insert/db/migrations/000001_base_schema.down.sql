@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS events;
+
+REVOKE ALL ON SCHEMA public FROM application;
+REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM application;
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM application;
