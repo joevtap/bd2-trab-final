@@ -1,4 +1,4 @@
-.PHONY: setup
+.PHONY: setup teardown purge test build run
 
 all: setup test build run
 
