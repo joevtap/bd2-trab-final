@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"gorm.io/driver/postgres"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
-
-type User struct{}
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
@@ -32,8 +33,22 @@ func main() {
 	g.UseDB(gormdb)
 
 	g.ApplyBasic(
-		g.GenerateModel("events"),
+		g.GenerateModel("events", gen.FieldJSONTagWithNS(nameStrategy)),
 	)
 
 	g.Execute()
+}
+
+func nameStrategy(columnName string) string {
+	strParts := strings.Split(columnName, "_")
+
+	tagContent := ""
+
+	for _, part := range strParts {
+		tagContent += cases.Title(language.English).String(part)
+	}
+
+	tagContent = cases.Lower(language.English).String(tagContent[:1]) + tagContent[1:]
+
+	return tagContent
 }

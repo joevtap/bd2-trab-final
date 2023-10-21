@@ -84,7 +84,7 @@ func main() {
 	err := query.Use(gormdb).Event.Create(&model.Event{
 		Name:                "Teste",
 		ShortDescription:    "asasd",
-		ClassificacaoEtaria: 18,
+		ClassificacaoEtaria: "Livre",
 	})
 
 	if err != nil {
