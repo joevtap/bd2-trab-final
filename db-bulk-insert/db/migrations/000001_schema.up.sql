@@ -1,6 +1,21 @@
 CREATE TABLE IF NOT EXISTS events (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(70) NOT NULL,
-    short_description VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    short_description TEXT NOT NULL,
     classificacao_etaria VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS agents (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS spaces (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );

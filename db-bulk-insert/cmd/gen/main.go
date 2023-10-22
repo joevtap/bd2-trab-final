@@ -34,6 +34,9 @@ func main() {
 
 	g.ApplyBasic(
 		g.GenerateModel("events", gen.FieldJSONTagWithNS(nameStrategy)),
+		g.GenerateModel("agents", gen.FieldJSONTagWithNS(nameStrategy)),
+		g.GenerateModel("spaces", gen.FieldJSONTagWithNS(nameStrategy)),
+		g.GenerateModel("projects", gen.FieldJSONTagWithNS(nameStrategy)),
 	)
 
 	g.Execute()

@@ -1,15 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/joevtap/bd2-trab-final/db-bulk-insert/internal/insert"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"sync"
 
 	"github.com/joevtap/bd2-trab-final/db-bulk-insert/gorm/model"
-	"github.com/joevtap/bd2-trab-final/db-bulk-insert/gorm/query"
+	"github.com/joevtap/bd2-trab-final/db-bulk-insert/internal/insert"
+	"github.com/joevtap/bd2-trab-final/db-bulk-insert/internal/save"
 )
 
 const (
@@ -17,87 +13,74 @@ const (
 )
 
 func main() {
-
-	resources := []insert.Resource{
-		{
+	resources := map[string]insert.Resource{
+		"event": {
 			Name: "event",
 			Call: insert.Call{
 				BaseUrl: BASE_URL,
 				Route:   "/event/find",
+				Params: insert.Params{
+					"@select": "id,name,shortDescription,classificacaoEtaria",
+					"@order":  "id ASC",
+				},
+				Limit:    3000,
+				CurrPage: 1,
 			},
 		},
-		{
+		"agent": {
 			Name: "agent",
 			Call: insert.Call{
 				BaseUrl: BASE_URL,
 				Route:   "/agent/find",
+				Params: insert.Params{
+					"@select": "id,name",
+					"@order":  "id ASC",
+				},
+				Limit:    5000,
+				CurrPage: 1,
 			},
 		},
-		{
+		"space": {
 			Name: "space",
 			Call: insert.Call{
 				BaseUrl: BASE_URL,
 				Route:   "/space/find",
+				Params: insert.Params{
+					"@select": "id,name",
+					"@order":  "id ASC",
+				},
+				Limit:    5000,
+				CurrPage: 1,
 			},
 		},
-		{
+		"project": {
 			Name: "project",
 			Call: insert.Call{
 				BaseUrl: BASE_URL,
 				Route:   "/project/find",
+				Params: insert.Params{
+					"@select": "id,name",
+					"@order":  "id ASC",
+				},
+				Limit:    5000,
+				CurrPage: 1,
 			},
 		},
 	}
 
-	wch := make(chan struct{})
+	wg := &sync.WaitGroup{}
 
-	for i := range resources {
-		go func(i int, resources []insert.Resource) {
-			err := resources[i].SetCount()
+	wg.Add(1)
+	go insert.SaveResource[model.Event](resources["event"], 1000, save.SaveEvent, wg)
 
-			if err != nil {
-				panic(err)
-			}
+	wg.Add(1)
+	go insert.SaveResource[model.Agent](resources["agent"], 1000, save.SaveAgent, wg)
 
-			wch <- struct{}{}
-		}(i, resources)
+	wg.Add(1)
+	go insert.SaveResource[model.Space](resources["space"], 1000, save.SaveSpace, wg)
 
-		<-wch
-	}
+	wg.Add(1)
+	go insert.SaveResource[model.Project](resources["project"], 1000, save.SaveProject, wg)
 
-	for _, resource := range resources {
-		fmt.Printf("%+v\n", resource)
-	}
-
-	dsn := fmt.Sprintf(
-		"host=%v user=%v password=%v dbname=%v port=%v sslmode=%v",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_SSLMODE"),
-	)
-
-	gormdb, _ := gorm.Open(postgres.Open(dsn))
-
-	err := query.Use(gormdb).Event.Create(&model.Event{
-		Name:                "Teste",
-		ShortDescription:    "asasd",
-		ClassificacaoEtaria: "Livre",
-	})
-
-	if err != nil {
-		panic(err)
-	}
-
-	events, err := query.Use(gormdb).Event.Find()
-
-	if err != nil {
-		panic(err)
-	}
-
-	for _, e := range events {
-		fmt.Printf("%+v\n", e)
-	}
+	wg.Wait()
 }
