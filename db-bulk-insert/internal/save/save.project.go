@@ -1,6 +1,8 @@
 package save
 
 import (
+	"log"
+
 	"github.com/joevtap/bd2-trab-final/db-bulk-insert/gorm/model"
 )
 
@@ -16,6 +18,8 @@ func SaveProject(ch chan []model.Project) {
 				panic(err)
 			}
 		}
+
+		log.Printf("Done saving %v projects. Next batch...\n", len(response))
 
 		tx.Commit()
 	}
