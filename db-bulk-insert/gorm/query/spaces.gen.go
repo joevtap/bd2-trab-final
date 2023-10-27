@@ -28,7 +28,18 @@ func newSpace(db *gorm.DB, opts ...gen.DOOption) space {
 	tableName := _space.spaceDo.TableName()
 	_space.ALL = field.NewAsterisk(tableName)
 	_space.ID = field.NewInt32(tableName, "id")
+	_space.Location = field.NewString(tableName, "location")
+	_space.Geolocation = field.NewString(tableName, "_geolocation")
 	_space.Name = field.NewString(tableName, "name")
+	_space.Public = field.NewBool(tableName, "public")
+	_space.Shortdescription = field.NewString(tableName, "shortdescription")
+	_space.Longdescription = field.NewString(tableName, "longdescription")
+	_space.Status = field.NewInt32(tableName, "status")
+	_space.Type = field.NewInt32(tableName, "_type")
+	_space.Eventoccurrences = field.NewString(tableName, "eventoccurrences")
+	_space.Parent = field.NewInt32(tableName, "parent")
+	_space.Children = field.NewString(tableName, "_children")
+	_space.Owner = field.NewInt32(tableName, "owner")
 
 	_space.fillFieldMap()
 
@@ -38,9 +49,20 @@ func newSpace(db *gorm.DB, opts ...gen.DOOption) space {
 type space struct {
 	spaceDo
 
-	ALL  field.Asterisk
-	ID   field.Int32
-	Name field.String
+	ALL              field.Asterisk
+	ID               field.Int32
+	Location         field.String
+	Geolocation      field.String
+	Name             field.String
+	Public           field.Bool
+	Shortdescription field.String
+	Longdescription  field.String
+	Status           field.Int32
+	Type             field.Int32
+	Eventoccurrences field.String
+	Parent           field.Int32
+	Children         field.String
+	Owner            field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -58,7 +80,18 @@ func (s space) As(alias string) *space {
 func (s *space) updateTableName(table string) *space {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt32(table, "id")
+	s.Location = field.NewString(table, "location")
+	s.Geolocation = field.NewString(table, "_geolocation")
 	s.Name = field.NewString(table, "name")
+	s.Public = field.NewBool(table, "public")
+	s.Shortdescription = field.NewString(table, "shortdescription")
+	s.Longdescription = field.NewString(table, "longdescription")
+	s.Status = field.NewInt32(table, "status")
+	s.Type = field.NewInt32(table, "_type")
+	s.Eventoccurrences = field.NewString(table, "eventoccurrences")
+	s.Parent = field.NewInt32(table, "parent")
+	s.Children = field.NewString(table, "_children")
+	s.Owner = field.NewInt32(table, "owner")
 
 	s.fillFieldMap()
 
@@ -75,9 +108,20 @@ func (s *space) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *space) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 2)
+	s.fieldMap = make(map[string]field.Expr, 13)
 	s.fieldMap["id"] = s.ID
+	s.fieldMap["location"] = s.Location
+	s.fieldMap["_geolocation"] = s.Geolocation
 	s.fieldMap["name"] = s.Name
+	s.fieldMap["public"] = s.Public
+	s.fieldMap["shortdescription"] = s.Shortdescription
+	s.fieldMap["longdescription"] = s.Longdescription
+	s.fieldMap["status"] = s.Status
+	s.fieldMap["_type"] = s.Type
+	s.fieldMap["eventoccurrences"] = s.Eventoccurrences
+	s.fieldMap["parent"] = s.Parent
+	s.fieldMap["_children"] = s.Children
+	s.fieldMap["owner"] = s.Owner
 }
 
 func (s space) clone(db *gorm.DB) space {

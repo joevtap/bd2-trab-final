@@ -28,9 +28,16 @@ func newEvent(db *gorm.DB, opts ...gen.DOOption) event {
 	tableName := _event.eventDo.TableName()
 	_event.ALL = field.NewAsterisk(tableName)
 	_event.ID = field.NewInt32(tableName, "id")
+	_event.Type = field.NewInt32(tableName, "_type")
 	_event.Name = field.NewString(tableName, "name")
-	_event.ShortDescription = field.NewString(tableName, "short_description")
-	_event.ClassificacaoEtaria = field.NewString(tableName, "classificacao_etaria")
+	_event.Shortdescription = field.NewString(tableName, "shortdescription")
+	_event.Longdescription = field.NewString(tableName, "longdescription")
+	_event.Rules = field.NewString(tableName, "rules")
+	_event.Createtimestamp = field.NewTime(tableName, "createtimestamp")
+	_event.Status = field.NewInt32(tableName, "status")
+	_event.Occurrences = field.NewString(tableName, "occurrences")
+	_event.Owner = field.NewInt32(tableName, "owner")
+	_event.Project = field.NewInt32(tableName, "project")
 
 	_event.fillFieldMap()
 
@@ -40,11 +47,18 @@ func newEvent(db *gorm.DB, opts ...gen.DOOption) event {
 type event struct {
 	eventDo
 
-	ALL                 field.Asterisk
-	ID                  field.Int32
-	Name                field.String
-	ShortDescription    field.String
-	ClassificacaoEtaria field.String
+	ALL              field.Asterisk
+	ID               field.Int32
+	Type             field.Int32
+	Name             field.String
+	Shortdescription field.String
+	Longdescription  field.String
+	Rules            field.String
+	Createtimestamp  field.Time
+	Status           field.Int32
+	Occurrences      field.String
+	Owner            field.Int32
+	Project          field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -62,9 +76,16 @@ func (e event) As(alias string) *event {
 func (e *event) updateTableName(table string) *event {
 	e.ALL = field.NewAsterisk(table)
 	e.ID = field.NewInt32(table, "id")
+	e.Type = field.NewInt32(table, "_type")
 	e.Name = field.NewString(table, "name")
-	e.ShortDescription = field.NewString(table, "short_description")
-	e.ClassificacaoEtaria = field.NewString(table, "classificacao_etaria")
+	e.Shortdescription = field.NewString(table, "shortdescription")
+	e.Longdescription = field.NewString(table, "longdescription")
+	e.Rules = field.NewString(table, "rules")
+	e.Createtimestamp = field.NewTime(table, "createtimestamp")
+	e.Status = field.NewInt32(table, "status")
+	e.Occurrences = field.NewString(table, "occurrences")
+	e.Owner = field.NewInt32(table, "owner")
+	e.Project = field.NewInt32(table, "project")
 
 	e.fillFieldMap()
 
@@ -81,11 +102,18 @@ func (e *event) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (e *event) fillFieldMap() {
-	e.fieldMap = make(map[string]field.Expr, 4)
+	e.fieldMap = make(map[string]field.Expr, 11)
 	e.fieldMap["id"] = e.ID
+	e.fieldMap["_type"] = e.Type
 	e.fieldMap["name"] = e.Name
-	e.fieldMap["short_description"] = e.ShortDescription
-	e.fieldMap["classificacao_etaria"] = e.ClassificacaoEtaria
+	e.fieldMap["shortdescription"] = e.Shortdescription
+	e.fieldMap["longdescription"] = e.Longdescription
+	e.fieldMap["rules"] = e.Rules
+	e.fieldMap["createtimestamp"] = e.Createtimestamp
+	e.fieldMap["status"] = e.Status
+	e.fieldMap["occurrences"] = e.Occurrences
+	e.fieldMap["owner"] = e.Owner
+	e.fieldMap["project"] = e.Project
 }
 
 func (e event) clone(db *gorm.DB) event {

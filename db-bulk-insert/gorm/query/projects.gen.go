@@ -28,7 +28,19 @@ func newProject(db *gorm.DB, opts ...gen.DOOption) project {
 	tableName := _project.projectDo.TableName()
 	_project.ALL = field.NewAsterisk(tableName)
 	_project.ID = field.NewInt32(tableName, "id")
+	_project.Type = field.NewInt32(tableName, "_type")
 	_project.Name = field.NewString(tableName, "name")
+	_project.Shortdescription = field.NewString(tableName, "shortdescription")
+	_project.Longdescription = field.NewString(tableName, "longdescription")
+	_project.Updatetimestamp = field.NewTime(tableName, "updatetimestamp")
+	_project.Registrationfrom = field.NewTime(tableName, "registrationfrom")
+	_project.Registrationto = field.NewTime(tableName, "registrationto")
+	_project.Createtimestamp = field.NewTime(tableName, "createtimestamp")
+	_project.Status = field.NewInt32(tableName, "status")
+	_project.Parent = field.NewInt32(tableName, "parent")
+	_project.Children = field.NewString(tableName, "_children")
+	_project.Owner = field.NewInt32(tableName, "owner")
+	_project.Events = field.NewString(tableName, "_events")
 
 	_project.fillFieldMap()
 
@@ -38,9 +50,21 @@ func newProject(db *gorm.DB, opts ...gen.DOOption) project {
 type project struct {
 	projectDo
 
-	ALL  field.Asterisk
-	ID   field.Int32
-	Name field.String
+	ALL              field.Asterisk
+	ID               field.Int32
+	Type             field.Int32
+	Name             field.String
+	Shortdescription field.String
+	Longdescription  field.String
+	Updatetimestamp  field.Time
+	Registrationfrom field.Time
+	Registrationto   field.Time
+	Createtimestamp  field.Time
+	Status           field.Int32
+	Parent           field.Int32
+	Children         field.String
+	Owner            field.Int32
+	Events           field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -58,7 +82,19 @@ func (p project) As(alias string) *project {
 func (p *project) updateTableName(table string) *project {
 	p.ALL = field.NewAsterisk(table)
 	p.ID = field.NewInt32(table, "id")
+	p.Type = field.NewInt32(table, "_type")
 	p.Name = field.NewString(table, "name")
+	p.Shortdescription = field.NewString(table, "shortdescription")
+	p.Longdescription = field.NewString(table, "longdescription")
+	p.Updatetimestamp = field.NewTime(table, "updatetimestamp")
+	p.Registrationfrom = field.NewTime(table, "registrationfrom")
+	p.Registrationto = field.NewTime(table, "registrationto")
+	p.Createtimestamp = field.NewTime(table, "createtimestamp")
+	p.Status = field.NewInt32(table, "status")
+	p.Parent = field.NewInt32(table, "parent")
+	p.Children = field.NewString(table, "_children")
+	p.Owner = field.NewInt32(table, "owner")
+	p.Events = field.NewString(table, "_events")
 
 	p.fillFieldMap()
 
@@ -75,9 +111,21 @@ func (p *project) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (p *project) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 2)
+	p.fieldMap = make(map[string]field.Expr, 14)
 	p.fieldMap["id"] = p.ID
+	p.fieldMap["_type"] = p.Type
 	p.fieldMap["name"] = p.Name
+	p.fieldMap["shortdescription"] = p.Shortdescription
+	p.fieldMap["longdescription"] = p.Longdescription
+	p.fieldMap["updatetimestamp"] = p.Updatetimestamp
+	p.fieldMap["registrationfrom"] = p.Registrationfrom
+	p.fieldMap["registrationto"] = p.Registrationto
+	p.fieldMap["createtimestamp"] = p.Createtimestamp
+	p.fieldMap["status"] = p.Status
+	p.fieldMap["parent"] = p.Parent
+	p.fieldMap["_children"] = p.Children
+	p.fieldMap["owner"] = p.Owner
+	p.fieldMap["_events"] = p.Events
 }
 
 func (p project) clone(db *gorm.DB) project {

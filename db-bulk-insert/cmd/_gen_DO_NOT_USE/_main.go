@@ -37,6 +37,7 @@ func main() {
 		g.GenerateModel("agents", gen.FieldJSONTagWithNS(nameStrategy)),
 		g.GenerateModel("spaces", gen.FieldJSONTagWithNS(nameStrategy)),
 		g.GenerateModel("projects", gen.FieldJSONTagWithNS(nameStrategy)),
+		g.GenerateModel("event_occurrences", gen.FieldJSONTagWithNS(nameStrategy)),
 	)
 
 	g.Execute()

@@ -9,8 +9,6 @@ setup:
 	@sleep 5
 	@echo "Running migrations..."
 	@sudo docker-compose up -d migrate
-	@echo "Generating GORM models..."
-	go run cmd/gen/main.go
 	@echo "Done!"
 
 teardown:

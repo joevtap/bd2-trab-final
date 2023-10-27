@@ -28,7 +28,16 @@ func newAgent(db *gorm.DB, opts ...gen.DOOption) agent {
 	tableName := _agent.agentDo.TableName()
 	_agent.ALL = field.NewAsterisk(tableName)
 	_agent.ID = field.NewInt32(tableName, "id")
+	_agent.Type = field.NewInt32(tableName, "_type")
 	_agent.Name = field.NewString(tableName, "name")
+	_agent.Shortdescription = field.NewString(tableName, "shortdescription")
+	_agent.Longdescription = field.NewString(tableName, "longdescription")
+	_agent.Status = field.NewInt32(tableName, "status")
+	_agent.Parent = field.NewInt32(tableName, "parent")
+	_agent.Children = field.NewString(tableName, "_children")
+	_agent.Spaces = field.NewString(tableName, "_spaces")
+	_agent.Projects = field.NewString(tableName, "_projects")
+	_agent.Events = field.NewString(tableName, "_events")
 
 	_agent.fillFieldMap()
 
@@ -38,9 +47,18 @@ func newAgent(db *gorm.DB, opts ...gen.DOOption) agent {
 type agent struct {
 	agentDo
 
-	ALL  field.Asterisk
-	ID   field.Int32
-	Name field.String
+	ALL              field.Asterisk
+	ID               field.Int32
+	Type             field.Int32
+	Name             field.String
+	Shortdescription field.String
+	Longdescription  field.String
+	Status           field.Int32
+	Parent           field.Int32
+	Children         field.String
+	Spaces           field.String
+	Projects         field.String
+	Events           field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -58,7 +76,16 @@ func (a agent) As(alias string) *agent {
 func (a *agent) updateTableName(table string) *agent {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt32(table, "id")
+	a.Type = field.NewInt32(table, "_type")
 	a.Name = field.NewString(table, "name")
+	a.Shortdescription = field.NewString(table, "shortdescription")
+	a.Longdescription = field.NewString(table, "longdescription")
+	a.Status = field.NewInt32(table, "status")
+	a.Parent = field.NewInt32(table, "parent")
+	a.Children = field.NewString(table, "_children")
+	a.Spaces = field.NewString(table, "_spaces")
+	a.Projects = field.NewString(table, "_projects")
+	a.Events = field.NewString(table, "_events")
 
 	a.fillFieldMap()
 
@@ -75,9 +102,18 @@ func (a *agent) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *agent) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 2)
+	a.fieldMap = make(map[string]field.Expr, 11)
 	a.fieldMap["id"] = a.ID
+	a.fieldMap["_type"] = a.Type
 	a.fieldMap["name"] = a.Name
+	a.fieldMap["shortdescription"] = a.Shortdescription
+	a.fieldMap["longdescription"] = a.Longdescription
+	a.fieldMap["status"] = a.Status
+	a.fieldMap["parent"] = a.Parent
+	a.fieldMap["_children"] = a.Children
+	a.fieldMap["_spaces"] = a.Spaces
+	a.fieldMap["_projects"] = a.Projects
+	a.fieldMap["_events"] = a.Events
 }
 
 func (a agent) clone(db *gorm.DB) agent {

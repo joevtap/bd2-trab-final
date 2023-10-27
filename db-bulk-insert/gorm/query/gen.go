@@ -16,49 +16,54 @@ import (
 )
 
 var (
-	Q       = new(Query)
-	Agent   *agent
-	Event   *event
-	Project *project
-	Space   *space
+	Q               = new(Query)
+	Agent           *agent
+	Event           *event
+	EventOccurrence *eventOccurrence
+	Project         *project
+	Space           *space
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Agent = &Q.Agent
 	Event = &Q.Event
+	EventOccurrence = &Q.EventOccurrence
 	Project = &Q.Project
 	Space = &Q.Space
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:      db,
-		Agent:   newAgent(db, opts...),
-		Event:   newEvent(db, opts...),
-		Project: newProject(db, opts...),
-		Space:   newSpace(db, opts...),
+		db:              db,
+		Agent:           newAgent(db, opts...),
+		Event:           newEvent(db, opts...),
+		EventOccurrence: newEventOccurrence(db, opts...),
+		Project:         newProject(db, opts...),
+		Space:           newSpace(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Agent   agent
-	Event   event
-	Project project
-	Space   space
+	Agent           agent
+	Event           event
+	EventOccurrence eventOccurrence
+	Project         project
+	Space           space
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:      db,
-		Agent:   q.Agent.clone(db),
-		Event:   q.Event.clone(db),
-		Project: q.Project.clone(db),
-		Space:   q.Space.clone(db),
+		db:              db,
+		Agent:           q.Agent.clone(db),
+		Event:           q.Event.clone(db),
+		EventOccurrence: q.EventOccurrence.clone(db),
+		Project:         q.Project.clone(db),
+		Space:           q.Space.clone(db),
 	}
 }
 
@@ -72,27 +77,30 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:      db,
-		Agent:   q.Agent.replaceDB(db),
-		Event:   q.Event.replaceDB(db),
-		Project: q.Project.replaceDB(db),
-		Space:   q.Space.replaceDB(db),
+		db:              db,
+		Agent:           q.Agent.replaceDB(db),
+		Event:           q.Event.replaceDB(db),
+		EventOccurrence: q.EventOccurrence.replaceDB(db),
+		Project:         q.Project.replaceDB(db),
+		Space:           q.Space.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Agent   IAgentDo
-	Event   IEventDo
-	Project IProjectDo
-	Space   ISpaceDo
+	Agent           IAgentDo
+	Event           IEventDo
+	EventOccurrence IEventOccurrenceDo
+	Project         IProjectDo
+	Space           ISpaceDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Agent:   q.Agent.WithContext(ctx),
-		Event:   q.Event.WithContext(ctx),
-		Project: q.Project.WithContext(ctx),
-		Space:   q.Space.WithContext(ctx),
+		Agent:           q.Agent.WithContext(ctx),
+		Event:           q.Event.WithContext(ctx),
+		EventOccurrence: q.EventOccurrence.WithContext(ctx),
+		Project:         q.Project.WithContext(ctx),
+		Space:           q.Space.WithContext(ctx),
 	}
 }
 
