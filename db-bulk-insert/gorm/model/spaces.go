@@ -2,31 +2,49 @@ package model
 
 const TableNameSpace = "spaces"
 
-// Space mapped from table <spaces>
 type Space struct {
-	ID                int32   `gorm:"column:id;not null" json:"id"`
-	Location          string  `gorm:"column:location;not null" json:"location"`
-	Geolocation       string  `gorm:"column:_geolocation;not null" json:"geolocation"`
-	Name              string  `gorm:"column:name;not null" json:"name"`
-	Public            bool    `gorm:"column:public;not null" json:"public"`
-	Shortdescription  string  `gorm:"column:shortdescription" json:"shortdescription"`
-	Longdescription   string  `gorm:"column:longdescription" json:"longdescription"`
-	Status            int32   `gorm:"column:status;not null" json:"status"`
-	Type              int32   `gorm:"column:_type;not null" json:"type"`
-	IEventoccurrences []int32 `gorm:"-" json:"eventOccurrences"`
-	Eventoccurrences  string  `gorm:"column:eventoccurrences"`
-	Parent            int32   `gorm:"column:parent" json:"parent"`
-	IChildren         []int32 `gorm:"-" json:"children"`
-	Children          string  `gorm:"column:_children"`
-	Owner             int32   `gorm:"column:owner" json:"owner"`
+	// Intermediary
+	ILocation         Location  `gorm:"-" json:"location"`
+	IEventoccurrences []int32   `gorm:"-" json:"eventOccurrences"`
+	IChildren         []int32   `gorm:"-" json:"children"`
+	ICreatetimestamp  Timestamp `gorm:"-" json:"createTimestamp"`
+	IUpdatetimestamp  Timestamp `gorm:"-" json:"updateTimestamp"`
+	ITerms            TermsType `gorm:"-" json:"terms"`
+
+	// Not null
+	ID       int32  `gorm:"column:id;not null" json:"id"`
+	Location string `gorm:"column:location;not null"`
+	Name     string `gorm:"column:name;not null" json:"name"`
+
+	// Nullable
+	Createtimestamp  string `gorm:"column:create_timestamp;default:null"`
+	Updatetimestamp  string `gorm:"column:update_timestamp;default:null"`
+	Eventoccurrences string `gorm:"column:event_occurrences;default:null"`
+	Children         string `gorm:"column:children;default:null"`
+	Terms            string `gorm:"column:terms;default:null"`
+
+	Shortdescription string `gorm:"column:short_description;default:null" json:"shortDescription"`
+	Horario          string `gorm:"column:horario;default:null" json:"horario"`
+	Telefone         string `gorm:"column:telefone;default:null" json:"telefonePublico"`
+	Email            string `gorm:"column:email;default:null" json:"emailPublico"`
+	Parent           int32  `gorm:"column:parent;default:null" json:"parent"`
+	Owner            int32  `gorm:"column:owner;default:null" json:"owner"`
 }
 
-// TableName Space's table name
-func (*Space) TableName() string {
+func (Space) TableName() string {
 	return TableNameSpace
 }
 
 func (s *Space) Format() {
 	s.Eventoccurrences = Format(s.IEventoccurrences)
 	s.Children = Format(s.IChildren)
+	s.Location = s.ILocation.Latitude + "," + s.ILocation.Longitude
+
+	if s.Location == "0,0" {
+		s.Location = ""
+	}
+
+	s.Createtimestamp = FormatTimestamp(s.ICreatetimestamp)
+	s.Updatetimestamp = FormatTimestamp(s.IUpdatetimestamp)
+	s.Terms = FormatQuery(s.ITerms)
 }

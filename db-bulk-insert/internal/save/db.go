@@ -2,25 +2,38 @@ package save
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"time"
 
-	"github.com/joevtap/bd2-trab-final/db-bulk-insert/gorm/query"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
 	dsn = fmt.Sprintf(
 		"host=%v user=%v password=%v dbname=%v port=%v sslmode=%v",
 		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_SSLMODE"),
 	)
 
-	gormdb, _ = gorm.Open(postgres.Open(dsn))
+	customLogger = logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             time.Second,
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: true,
+			ParameterizedQueries:      true,
+			Colorful:                  false,
+		},
+	)
 
-	Q = query.Use(gormdb)
+	DB, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: customLogger,
+	})
 )

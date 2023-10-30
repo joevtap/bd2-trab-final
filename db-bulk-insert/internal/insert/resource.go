@@ -6,6 +6,8 @@ import (
 	"log"
 	"strconv"
 	"time"
+
+	"github.com/joevtap/bd2-trab-final/db-bulk-insert/gorm/model"
 )
 
 type Call struct {
@@ -71,7 +73,7 @@ func (r *Resource) GetMany() (string, error) {
 	return res, nil
 }
 
-func GetBatch[T any](resource Resource, sleep time.Duration, ch chan []T) error {
+func GetBatch[T model.Formatter](resource Resource, sleep time.Duration, ch chan []T) error {
 	client := &Client{}
 	client.SetBaseUrl(resource.BaseUrl)
 
@@ -105,6 +107,10 @@ func GetBatch[T any](resource Resource, sleep time.Duration, ch chan []T) error 
 			errorChan <- nil
 
 			*results = append(*results, responses...)
+
+			for _, response := range responses {
+				response.Format()
+			}
 
 			ch <- responses
 			waitChan <- struct{}{}
