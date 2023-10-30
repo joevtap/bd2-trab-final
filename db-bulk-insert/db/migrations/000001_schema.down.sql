@@ -2,3 +2,4 @@ DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS agents;
 DROP TABLE IF EXISTS spaces;
 DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS event_occurrences;
