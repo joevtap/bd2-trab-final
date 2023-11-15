@@ -1,4 +1,4 @@
-.PHONY: setup teardown purge test build run
+.PHONY: all db app setup teardown purge build-win build-darwin build-linux
 
 all: setup app
 
