@@ -18,3 +18,13 @@ services:
       - ./db/migrations:/migrations
     depends_on:
       - db
+  
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - migrate

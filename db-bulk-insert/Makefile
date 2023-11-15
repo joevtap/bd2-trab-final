@@ -1,6 +1,16 @@
 .PHONY: setup teardown purge test build run
 
-all: setup test build run
+all: setup app
+
+db:
+	@echo "Starting Docker containers..."
+	@sudo docker-compose up -d db
+	@echo "Done!"
+
+app:
+	@echo "Starting Docker containers..."
+	@sudo docker-compose up -d app
+	@echo "Done!"
 
 setup:
 	@echo "Starting Docker containers..."
@@ -21,17 +31,17 @@ purge:
 	@sudo rm -rf ./db/data
 	@echo "Done!"
 
-test:
-	@echo "Running tests..."
-	@go test -v ./internal/...
-	@go test -v ./gorm/...
-	@go test -v ./cmd/...
-	@echo "Done!"
-
-build:
+build-win:
 	@echo "Building bulk-insert..."
-	@go build -o cmd/bulk-insert/bin/bulk-insert cmd/bulk-insert/main.go
+	@docker run -e GOOS=windows -e GOARCH=amd64 --rm -v .:/usr/src/app -w /usr/src/app golang:1.21 go build -o ./cmd/bulk-insert/bin/bulk-insert-windows-amd64.exe ./cmd/bulk-insert/main.go
 	@echo "Done!"
 
-run:
-	@./cmd/bulk-insert/bin/bulk-insert
+build-darwin:
+	@echo "Building bulk-insert..."
+	@docker run -e GOOS=darwin -e GOARCH=amd64 --rm -v .:/usr/src/app -w /usr/src/app golang:1.21 go build -o ./cmd/bulk-insert/bin/bulk-insert-darwin-amd64 ./cmd/bulk-insert/main.go
+	@echo "Done!"
+
+build-linux:
+	@echo "Building bulk-insert..."
+	@docker run -e GOOS=linux -e GOARCH=amd64 --rm -v .:/usr/src/app -w /usr/src/app golang:1.21 go build -o ./cmd/bulk-insert/bin/bulk-insert-linux-amd64 ./cmd/bulk-insert/main.go
+	@echo "Done!"
