@@ -1,4 +1,4 @@
-.PHONY: all db app setup teardown purge build-win build-darwin build-linux
+.PHONY: all db app migrate setup teardown purge build-win build-darwin build-linux
 
 all: setup app
 
@@ -10,6 +10,11 @@ db:
 app:
 	@echo "Starting Docker containers..."
 	@sudo docker-compose up -d app
+	@echo "Done!"
+
+migrate:
+	@echo "Starting Docker containers..."
+	@sudo docker-compose up -d migrate
 	@echo "Done!"
 
 setup:
