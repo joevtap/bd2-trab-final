@@ -1,0 +1,6 @@
+[submodule "api"]
+	path = api
+	url = git@github.com:GianlucaBorges/Trabalho-BD2.git
+[submodule "ad-hoc"]
+	path = ad-hoc
+	url = git@github.com:GabrielCiriaco/trabalho_bd2.git
